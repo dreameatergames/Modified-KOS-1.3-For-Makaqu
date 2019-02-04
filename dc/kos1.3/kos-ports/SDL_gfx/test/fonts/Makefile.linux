@@ -1,0 +1,44 @@
+TARGET	=	fonts
+
+
+CC =		gcc
+STRIP=		strip
+
+
+SDL_CFLAGS =	`sdl-config --cflags`
+SDL_LDFLAGS =	`sdl-config --libs`
+
+
+CFLAGS =	-Wall -Wno-switch -march=pentium -mcpu=pentium ${SDL_CFLAGS} \
+		-ffast-math -fno-common -ffreestanding -fno-builtin -Isrc/ \
+		-fno-exceptions -fstrict-aliasing -O6 -I../../include
+
+CFLAGS+=-DDLLINTERFACE=""
+
+
+LDFLAGS =	-L../../lib -L/usr/lib -lSDL_gfx -lSDL_image ${SDL_LDFLAGS} \
+		-lpng -lz -ljpeg \
+
+
+
+.CFILES	=	fonts.c
+
+
+all: $(TARGET)
+
+
+
+OBJS =		$(.CFILES:.c=.o)
+
+
+$(TARGET):	$(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
+	$(STRIP) $(TARGET)
+
+
+run:		$(TARGET)
+	./$(TARGET)
+
+
+clean:
+	rm -f $(OBJS) $(TARGET)

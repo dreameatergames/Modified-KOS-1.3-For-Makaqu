@@ -1,0 +1,14 @@
+all:
+	cd fonts; make -f Makefile.gp32
+	cd rotozoom; make -f Makefile.gp32
+	cd framerate; make -f Makefile.gp32
+	cd primitives; make -f Makefile.gp32
+
+clean:
+	cd fonts; make -f Makefile.gp32 clean
+	cd rotozoom; make -f Makefile.gp32 clean
+	cd primitives; make -f Makefile.gp32 clean
+	cd framerate; make -f Makefile.gp32 clean
+run:
+	cd rotozoom; make -f Makefile.gp32 run
+

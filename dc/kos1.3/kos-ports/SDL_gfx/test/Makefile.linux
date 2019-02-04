@@ -1,0 +1,14 @@
+all:
+	cd fonts; make -f Makefile.linux
+	cd rotozoom; make -f Makefile.linux
+	cd framerate; make -f Makefile.linux
+	cd primitives; make -f Makefile.linux
+
+clean:
+	cd fonts; make -f Makefile.linux clean
+	cd rotozoom; make -f Makefile.linux clean
+	cd primitives; make -f Makefile.linux clean
+	cd framerate; make -f Makefile.linux clean
+run:
+	cd rotozoom; make -f Makefile.linux run
+

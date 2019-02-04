@@ -1,0 +1,54 @@
+TARGET	=	lib/libSDL_gfx.a
+
+
+CC =		gcc
+STRIP=		strip
+
+
+SDL_CFLAGS =	`sdl-config --cflags`
+SDL_LDFLAGS =	`sdl-config --libs`
+
+
+CFLAGS =	-Wall -Wno-switch -march=pentium -mcpu=pentium ${SDL_CFLAGS} \
+		-ffast-math -fno-common -ffreestanding -fno-builtin -Iinclude/ \
+		-fno-exceptions -fstrict-aliasing -O6
+
+CFLAGS+= -DPACKAGE=\"SDL_gfx\" -DVERSION=\"2.0.13\" -DDLLINTERFACE=""
+
+CFLAGS+= -DUSE_FIXED_POINT
+
+
+LDFLAGS =	-L/usr/lib -lSDL_image ${SDL_LDFLAGS} \
+		-lpng -lz -ljpeg \
+
+
+
+.CFILES	=	src/SDL_framerate.c \
+		src/SDL_gfxPrimitives.c \
+		src/SDL_imageFilter.c \
+		src/SDL_rotozoom.c
+
+
+all: $(TARGET) test
+
+test:
+	cd test; make -f Makefile.linux
+
+
+
+OBJS =		$(.CFILES:.c=.o)
+
+
+$(TARGET):	$(OBJS)
+	cd test; make -f Makefile.linux clean
+	rm -f $(TARGET)
+	$(AR) cru $(TARGET) $(OBJS)
+
+
+run:	$(TARGET) test
+	cd test; make -f Makefile.linux run
+
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+	cd test; make -f Makefile.linux clean

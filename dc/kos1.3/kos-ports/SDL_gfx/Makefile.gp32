@@ -1,0 +1,41 @@
+CC = arm-elf-gcc
+AR = arm-elf-ar
+AS = arm-elf-as
+LD = arm-elf-gcc
+STRIP = arm-elf-strip
+
+TARGET = $(GP32PATH)/arm-elf/lib/libSDLx_gfx.a
+
+all: $(TARGET)
+
+DEFS= -DGP32 -DPACKAGE=\"SDL_gfx\" -DUSE_FIXED_POINT
+
+OPTFLAGS=-mtune=arm920 -march=armv4t -marm -mno-thumb-interwork -msoft-float -ffast-math -nostdlib -fno-common -ffreestanding -fno-builtin -fno-exceptions -mstructure-size-boundary=8 -O3 -fomit-frame-pointer -fstrict-aliasing -Wall
+
+CFLAGS= -DGP32_LIBC
+
+CFLAGS+= -I./include -I../SDL-1.2.7/include/ $(OPTFLAGS) $(DEFS)
+
+SRCS = \
+	src/SDL_framerate.c \
+	src/SDL_gfxPrimitives.c \
+	src/SDL_imageFilter.c \
+	src/SDL_rotozoom.c
+
+
+
+
+OBJS = $(SRCS:.c=.o)
+
+TEST = \
+	showimage.c \
+
+
+clean:
+	rm -f $(OBJS)
+
+$(TARGET) : $(OBJS)
+	rm -f $(TARGET)
+	$(AR) rcs $(TARGET) $(OBJS)
+#	$(STRIP) $(TARGET)
+

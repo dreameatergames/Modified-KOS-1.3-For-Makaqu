@@ -1,0 +1,47 @@
+CC = arm-elf-gcc
+AR = arm-elf-ar
+AS = arm-elf-as
+LD = arm-elf-gcc
+STRIP = arm-elf-strip
+
+
+TARGET = /opt/gp32/arm-elf/lib/libSDLx_image.a
+
+all: $(TARGET)
+
+DEFS= -DSDL_USE_PTHREADS -DNO_SIGNAL_H -DENABLE_GP32 -DLOAD_PCX -DLOAD_BMP -DLOAD_GIF -DLOAD_LBM -DLOAD_PNM -DLOAD_TGA -DLOAD_XXX -DLOAD_PNG -DLOAD_JPG -DLOAD_XPM -DLOAD_XCF
+
+OPTFLAGS=-mtune=arm920 -march=armv4t -marm -mno-thumb-interwork -msoft-float -ffast-math -nostdlib -fno-common -ffreestanding -fno-builtin -fno-exceptions -mstructure-size-boundary=8 -O3 -fomit-frame-pointer -fstrict-aliasing -Wall
+
+CFLAGS=$(OPTFLAGS) $(DEFS)
+
+CFLAGS+= -I$(GP32PATH)/include/SDL
+
+SRCS = \
+	IMG_bmp.c \
+	IMG_gif.c \
+	IMG_jpg.c \
+	IMG_lbm.c \
+	IMG_pcx.c \
+	IMG_png.c \
+	IMG_pnm.c \
+	IMG_tga.c \
+	IMG_tif.c \
+	IMG_xcf.c \
+	IMG_xpm.c \
+	IMG_xxx.c \
+	IMG.c \
+
+OBJS = $(SRCS:.c=.o)
+
+TEST = \
+	showimage.c \
+
+
+clean:
+	rm -f $(OBJS)
+
+$(TARGET) : $(OBJS)
+	rm -f $(TARGET)
+	$(AR) rcs $(TARGET) $(OBJS)
+

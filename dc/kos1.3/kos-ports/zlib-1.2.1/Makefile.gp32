@@ -1,0 +1,45 @@
+CC = arm-elf-gcc
+AR = arm-elf-ar
+AS = arm-elf-as
+LD = arm-elf-gcc
+STRIP = arm-elf-strip
+
+
+TARGET = /opt/gp32/arm-elf/lib/libz_x.a
+
+all: $(TARGET)
+
+DEFS= -DPACKAGE=\"zlib\" -DVERSION=\"1.2.3\" -DHAVE_UNISTD_H -DUSE_MMAP -DNO_ERRNO_H -D_REENTRANT
+
+DEFS+=-DGP32_LIBC
+
+OPTFLAGS=-mtune=arm920 -march=armv4t -marm -mno-thumb-interwork -msoft-float -ffast-math -nostdlib -fno-common -ffreestanding -fno-builtin -fno-exceptions -mstructure-size-boundary=8 -O3 -fomit-frame-pointer -fstrict-aliasing -Wall
+
+CFLAGS=$(OPTFLAGS) $(DEFS)
+
+CFLAGS+=-I. -I./include
+
+SRCS = \
+	adler32.c \
+	compress.c \
+	crc32.c \
+	gzio.c \
+	uncompr.c \
+	deflate.c \
+	trees.c \
+	zutil.c \
+	inflate.c \
+	inftrees.c \
+	infback.c \
+	inffast.c \
+
+
+OBJS = $(SRCS:.c=.o)
+
+clean:
+	rm -f $(OBJS)
+
+$(TARGET) : $(OBJS)
+	rm -f $(TARGET)
+	$(AR) rcs $(TARGET) $(OBJS)
+

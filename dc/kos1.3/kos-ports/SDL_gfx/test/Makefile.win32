@@ -1,0 +1,14 @@
+all:
+	cd fonts; make -f Makefile.win32
+	cd rotozoom; make -f Makefile.win32
+	cd framerate; make -f Makefile.win32
+	cd primitives; make -f Makefile.win32
+
+clean:
+	cd fonts; make -f Makefile.win32 clean
+	cd rotozoom; make -f Makefile.win32 clean
+	cd primitives; make -f Makefile.win32 clean
+	cd framerate; make -f Makefile.win32 clean
+run:
+	cd rotozoom; make -f Makefile.win32 run
+

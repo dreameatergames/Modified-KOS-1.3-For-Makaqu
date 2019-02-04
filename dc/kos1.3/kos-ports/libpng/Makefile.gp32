@@ -1,0 +1,49 @@
+CC = arm-elf-gcc
+AR = arm-elf-ar
+AS = arm-elf-as
+LD = arm-elf-gcc
+STRIP = arm-elf-strip
+
+
+TARGET = /opt/gp32/arm-elf/lib/libpng_x.a
+
+all: $(TARGET)
+
+DEFS= -DPACKAGE=\"libpng\" -DVERSION=\"1.2.8\" -DHAVE_UNISTD_H -DPNG_NO_CONSOLE_IO -DPNG_USER_MEM_SUPPORTED -DPNG_SETJMP_NOT_SUPPORTED -D_REENTRANT -DPNG_NO_FLOATING_POINT_SUPPORTED -DPNG_NO_ERROR_NUMBERS
+
+DEFS+=-DGP32_LIBC
+
+OPTFLAGS=-mtune=arm920 -march=armv4t -marm -mno-thumb-interwork -msoft-float -ffast-math -nostdlib -fno-common -ffreestanding -fno-builtin -fno-exceptions -mstructure-size-boundary=8 -O3 -fomit-frame-pointer -fstrict-aliasing -Wall -funroll-loops
+
+CFLAGS=$(OPTFLAGS) $(DEFS)
+
+CFLAGS+= -I. -Iinclude
+
+SRCS = \
+	png.c \
+	pngset.c \
+	pngget.c \
+	pngrutil.c \
+	pngtrans.c \
+	pngwutil.c \
+	pngread.c \
+	pngrio.c \
+	pngwio.c \
+	pngwrite.c \
+	pngrtran.c \
+	pngwtran.c \
+	pngmem.c \
+	pngerror.c \
+	pngpread.c \
+
+
+OBJS = $(SRCS:.c=.o)
+
+clean:
+	rm -f $(OBJS)
+
+$(TARGET) : $(OBJS)
+	rm -f $(TARGET)
+	$(AR) rcs $(TARGET) $(OBJS)
+#	$(STRIP) $(TARGET)
+
